@@ -81,7 +81,7 @@ function setData(m,t　,u) {
     command.splice(0,0,"",t);
     command.splice(3,0,'','');
     command.pop();
-    command.push(u,'依頼前');
+    command.push(u,'確認前');
     replyMessage += "\n"+command[2]+' '+command[5];
     
     for (var i=1; i<=count; i++) {
@@ -114,7 +114,7 @@ function setData(m,t　,u) {
           sh.getRange(i+1,5).setValue(command[2]);
           var time = new Date(data[i][3]);
           time = Utilities.formatDate(time,'JST', 'H:mm');
-          sh.getRange(i+1,8).setValue('依頼前');
+          sh.getRange(i+1,8).setValue('確認前');
           replyMessage = '以下の通り配車を割り振りました。\n\n'+command[1]+' '+time+' '+command[2];
           return replyMessage
         }
@@ -168,12 +168,58 @@ function setData(m,t　,u) {
         
         if (contents != '') {
           var te = requestText(contents);
-          var rt = 'お世話になります。\n\n'+ date +'分の五井火力の引取依頼となります。配車可否のご連絡をお願い申し上げます。\n' + te + '\n\nディールコネクト 　辻';
-          Logger.log(rt);
-          pushMessage(id,rt);
+          var rt = 'お世話になります。\n\n'+ date +'分の五井火力の引取依頼となります。以下のボタンより配車可否の回答をお願いします。\n' + te + '\n\nディールコネクト 　辻';
+          
+          var postData = {
+            "to": id,
+            "messages": [{
+              "type": "template",
+              "altText": "this is a buttons template",
+              "template": {
+                "type": "buttons",
+                "actions": [
+                  {
+                    "type": "message",
+                    "label": "配車可能",
+                    "text": "配車可能です！"
+                  },
+                  {
+                    "type": "message",
+                    "label": "変更希望",
+                    "text": "変更希望です！"
+                  }
+                ],
+                "title": date + " 五井火力",
+                "text": rt
+              }
+            }]
+          };
+          pushMessage(postData);
+
         } else {
           var rt = 'お世話になります。\n\n'+ date +'分の五井火力の引取依頼はなしとなります。\nよろしくお願い申し上げます。\n\nディールコネクト 　辻';
-          pushMessage(id,rt);
+          
+          var postData = {
+            "to": id,
+            "messages": [{
+              "type": "template",
+              "altText": "this is a buttons template",
+              "template": {
+                "type": "buttons",
+                "actions": [
+                  {
+                    "type": "message",
+                    "label": "確認",
+                    "text": "確認済みです！"
+                  }
+                ],
+                "title": date + " 五井火力",
+                "text": rt
+              }
+            }]
+          };
+          
+          pushMessage(postData);
         }
       }
       var replyMessage = '配車依頼を送信しました。';
@@ -192,7 +238,32 @@ function setData(m,t　,u) {
       }
       var text = requestText(contents);
       var rt = 'お世話になります。\n\n'+ date +'分の五井火力の引取依頼となります。配車可否のご連絡をお願い申し上げます。\n' + text + '\n\nディールコネクト 　辻';
-      pushMessage(id,rt);
+      
+      var postData = {
+            "to": id,
+            "messages": [{
+              "type": "template",
+              "altText": "this is a buttons template",
+              "template": {
+                "type": "buttons",
+                "actions": [
+                  {
+                    "type": "message",
+                    "label": "配車可能",
+                    "text": "配車可能です！"
+                  },
+                  {
+                    "type": "message",
+                    "label": "変更希望",
+                    "text": "変更希望です！"
+                  }
+                ],
+                "title": date + " 五井火力",
+                "text": rt
+              }
+            }]
+          };
+      pushMessage(postData);
       
       var replyMessage = command[2]+'へ配車依頼を送信しました。';
       return replyMessage
@@ -291,13 +362,11 @@ function fetchContents(date,customer) {
     var d = new Date(data[i][2]);
     d = Utilities.formatDate(d,'JST', 'M/d');
     if (date == d) {
-      if (customer == data[i][4] && data[i][7] == '依頼前') {
+      if (customer == data[i][4] && data[i][7] == '確認前') {
         var time = new Date(data[i][3]);
         time = Utilities.formatDate(time,'JST', 'H:mm'); 
         var content = new Content(time, data[i][5]);
         contents.push(content);
-        sh.getRange(i+1,8).setValue('依頼済');
-        Logger.log(contents);
       }  
     }
   }
@@ -316,16 +385,8 @@ function requestText(contents) {
 }
 
 // プッシュメッセージ
-function pushMessage(GROUP_ID,text) {
+function pushMessage(postData) {
   var CHANNEL_ACCESS_TOKEN = 'hL3Rk4DoFeHO3IIAimDM8RwcEOfJSQ/eZdlah6wWnRUNIs0E/Fn5/Js07Wx2XABDDxb7VMEunF5/vqg0TD99zlaFl7HtsOW2waVUlOL6unmKvlERIcmANPDw31nPlBEBHDfX4vvXzF7/NGpUn/uEaAdB04t89/1O/w1cDnyilFU=';
-  var postData = {
-    "to": GROUP_ID,
-    "messages": [{
-      "type": "text",
-      "text": text,
-    }]
-  };
-
   var url = "https://api.line.me/v2/bot/message/push";
   var headers = {
     "Content-Type": "application/json",
