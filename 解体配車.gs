@@ -128,7 +128,7 @@ function setData(m,t　,u, g) {
         if (data[i][0] == index) {
           sh.getRange(i+1,5).setValue(command[3]);
           sh.getRange(i+1,4).setValue(command[2]);
-          sh.getRange(i+1,8).setValue('依頼前');
+          sh.getRange(i+1,8).setValue('確認前');
           replyMessage = '以下の通り配車を割り振りました。\n\n'+command[1]+' '+command[2]+' '+command[3];
           Logger.log(replyMessage);
           return replyMessage
@@ -160,29 +160,100 @@ function setData(m,t　,u, g) {
         
         if (contents != '') {
           var te = requestText(contents);
-          var rt = 'お世話になります。\n\n'+ date +'分の五井火力の引取依頼となります。以下のボタンより配車可否の回答をお願いします。\n' + te + '\n\nディールコネクト 　辻';
           
           var postData = {
             "to": id,
             "messages": [{
-              "type": "template",
-              "altText": "this is a buttons template",
-              "template": {
-                "type": "buttons",
-                "actions": [
-                  {
-                    "type": "message",
-                    "label": "配車可能",
-                    "text": "配車可能です！"
-                  },
-                  {
-                    "type": "message",
-                    "label": "変更希望",
-                    "text": "変更希望です！"
-                  }
-                ],
-                "title": date + " 五井火力",
-                "text": rt
+              "type": "flex",
+              "altText": "Flex Message",
+              "contents": {
+                "type": "bubble",
+                "body": {
+                  "type": "box",
+                  "layout": "vertical",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": date + " 五井火力",
+                      "size": "lg",
+                      "weight": "bold"
+                    },
+                    {
+                      "type": "box",
+                      "layout": "baseline",
+                      "margin": "sm",
+                      "contents": [
+                        {
+                          "type": "text",
+                          "text": date + "分の五井火力の引取依頼です。配車可否のご連絡をお願い申し上げます。",
+                          "flex": 0,
+                          "margin": "md",
+                          "size": "sm",
+                          "color": "#474545",
+                          "wrap": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "box",
+                      "layout": "vertical",
+                      "spacing": "sm",
+                      "margin": "sm",
+                      "contents": [
+                        {
+                          "type": "box",
+                          "layout": "baseline",
+                          "spacing": "sm",
+                          "contents": [
+                            {
+                              "type": "text",
+                              "text": te,
+                              "flex": 1,
+                              "margin": "sm",
+                              "size": "md",
+                              "weight": "bold",
+                              "color": "#474545",
+                              "wrap": true
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "footer": {
+                  "type": "box",
+                  "layout": "vertical",
+                  "flex": 0,
+                  "spacing": "sm",
+                  "margin": "xs",
+                  "contents": [
+                    {
+                      "type": "button",
+                      "action": {
+                        "type": "message",
+                        "label": "配車可能",
+                        "text": "配車可能です！"
+                      },
+                      "height": "sm",
+                      "style": "link"
+                    },
+                    {
+                      "type": "button",
+                      "action": {
+                        "type": "message",
+                        "label": "変更希望",
+                        "text": "変更希望です！"
+                      },
+                      "height": "sm",
+                      "style": "link"
+                    },
+                    {
+                      "type": "spacer",
+                      "size": "sm"
+                    }
+                  ]
+                }
               }
             }]
           };
@@ -194,19 +265,61 @@ function setData(m,t　,u, g) {
           var postData = {
             "to": id,
             "messages": [{
-              "type": "template",
-              "altText": "this is a buttons template",
-              "template": {
-                "type": "buttons",
-                "actions": [
-                  {
-                    "type": "message",
-                    "label": "確認",
-                    "text": "確認済みです！"
-                  }
-                ],
-                "title": date + " 五井火力",
-                "text": rt
+              "type": "flex",
+              "altText": "Flex Message",
+              "contents": {
+                "type": "bubble",
+                "body": {
+                  "type": "box",
+                  "layout": "vertical",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": date + " 五井火力",
+                      "size": "lg",
+                      "weight": "bold"
+                    },
+                    {
+                      "type": "box",
+                      "layout": "baseline",
+                      "margin": "sm",
+                      "contents": [
+                        {
+                          "type": "text",
+                          "text": date + "分の五井火力の引取依頼はなしとなります。よろしくお願い申し上げます。",
+                          "flex": 0,
+                          "margin": "md",
+                          "size": "sm",
+                          "color": "#474545",
+                          "wrap": true
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "footer": {
+                  "type": "box",
+                  "layout": "vertical",
+                  "flex": 0,
+                  "spacing": "sm",
+                  "margin": "xs",
+                  "contents": [
+                    {
+                      "type": "button",
+                      "action": {
+                        "type": "message",
+                        "label": "確認",
+                        "text": "確認しました！"
+                      },
+                      "height": "sm",
+                      "style": "link"
+                    },
+                    {
+                      "type": "spacer",
+                      "size": "xs"
+                    }
+                  ]
+                }
               }
             }]
           };
@@ -228,33 +341,103 @@ function setData(m,t　,u, g) {
           var id = cusData[i][1];
         }
       }
-      var text = requestText(contents);
-      var rt = 'お世話になります。\n\n'+ date +'分の五井火力の引取依頼となります。配車可否のご連絡をお願い申し上げます。\n' + text + '\n\nディールコネクト 　辻';
-      
+      var te = requestText(contents);
       var postData = {
-            "to": id,
-            "messages": [{
-              "type": "template",
-              "altText": "this is a buttons template",
-              "template": {
-                "type": "buttons",
-                "actions": [
-                  {
+        "to": id,
+        "messages": [{
+          "type": "flex",
+          "altText": "Flex Message",
+          "contents": {
+            "type": "bubble",
+            "body": {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": date + " 五井火力",
+                  "size": "lg",
+                  "weight": "bold"
+                },
+                {
+                  "type": "box",
+                  "layout": "baseline",
+                  "margin": "sm",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": date + "分の五井火力の引取依頼です。配車可否のご連絡をお願い申し上げます。",
+                      "flex": 0,
+                      "margin": "md",
+                      "size": "sm",
+                      "color": "#474545",
+                      "wrap": true
+                    }
+                  ]
+                },
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "spacing": "sm",
+                  "margin": "sm",
+                  "contents": [
+                    {
+                      "type": "box",
+                      "layout": "baseline",
+                      "spacing": "sm",
+                      "contents": [
+                        {
+                          "type": "text",
+                          "text": te,
+                          "flex": 1,
+                          "margin": "sm",
+                          "size": "md",
+                          "weight": "bold",
+                          "color": "#474545",
+                          "wrap": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "footer": {
+              "type": "box",
+              "layout": "vertical",
+              "flex": 0,
+              "spacing": "sm",
+              "margin": "xs",
+              "contents": [
+                {
+                  "type": "button",
+                  "action": {
                     "type": "message",
                     "label": "配車可能",
                     "text": "配車可能です！"
                   },
-                  {
+                  "height": "sm",
+                  "style": "link"
+                },
+                {
+                  "type": "button",
+                  "action": {
                     "type": "message",
                     "label": "変更希望",
                     "text": "変更希望です！"
-                  }
-                ],
-                "title": date + " 五井火力",
-                "text": rt
-              }
-            }]
-          };
+                  },
+                  "height": "sm",
+                  "style": "link"
+                },
+                {
+                  "type": "spacer",
+                  "size": "sm"
+                }
+              ]
+            }
+          }
+        }]
+      };
       pushMessage(postData);
       
       var replyMessage = command[2]+'へ配車依頼を送信しました。';
@@ -265,7 +448,7 @@ function setData(m,t　,u, g) {
 // ==================================  
 // 先頭が「配車可能です！」もしくは「確認しました！」のとき
 // ==================================
-  else if (command[0] == '配車可能です！' || '確認済みです！') {
+  else if (command[0] == '配車可能です！' || '確認しました！') {
     for (var i=1; i<cusData.length; i++) {
       if (cusData[i][1] == g) {
         for (var j=1; j<data.length; j++) {
@@ -288,7 +471,7 @@ function setData(m,t　,u, g) {
 // ==================================  
 // 先頭が「変更希望です！」のとき
 // ==================================
-  else if (command[0] == '配車可能です！' || '確認済みです！') {
+  else if (command[0] == '変更希望です！') {
     var postData = {
       "to": g,
       "messages": [{
@@ -335,7 +518,7 @@ function setData(m,t　,u, g) {
     for (var i=0; i<lastRow; i++) {
       var d = new Date(data[i][2]);
       d = Utilities.formatDate(d,'JST', 'M/d');
-      if (date == d && data[i][7] == '依頼済') {
+      if (date == d && data[i][7] == '確認済') {
         var time = new Date(data[i][3]);
         time = Utilities.formatDate(time,'JST', 'H:mm');
         body += '\n'+ time +' '+ data[i][4] +' '+ data[i][5];
@@ -408,7 +591,7 @@ function requestText(contents) {
   var text = '';
    
   for (var i=0; i<contents.length; i++) {
-    text += "\n"+ contents[i].time + " " + contents[i].truck;
+    text += '\n'+ contents[i].time + " " + contents[i].truck;
   }
   
   return text
@@ -426,13 +609,15 @@ function pushMessage(postData) {
   var options = {
     "method": "post",
     "headers": headers,
-    "payload": JSON.stringify(postData)
+    "payload": JSON.stringify(postData),
+    "muteHttpExceptions": true
   };
   var response = UrlFetchApp.fetch(url, options);
+  Logger.log(response.getContentText());
 }
 
 function test() {
-  var m = '依頼 7/23 全社';
+  var m = '依頼 7/31 全社';
   var t = new Date();
   var u = 'U6fc79eba210a02ee240c2bb8a491b16c';
   setData(m,t,u);
