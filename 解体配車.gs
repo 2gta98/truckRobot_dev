@@ -24,12 +24,8 @@ function doPost(e) {
   sh.getRange(lastRow+1,1).setValue(userId);
   sh.getRange(lastRow+1,2).setValue(messageInfo);
   
-  if (userId != 'U6fc79eba210a02ee240c2bb8a491b16c') {
-    return
-  }
-  
   //送信・返信用のデーターの保存
-  var replyMessage =　setData(userMessage, timestamp, userId);
+  var replyMessage =　setData(userMessage, timestamp, userId, groupId);
   
   var postData = {
     "replyToken": replyToken,
@@ -59,13 +55,17 @@ function doPost(e) {
 *@param LINE@のuserId
 */
 
-function setData(m,t　,u) {
+function setData(m,t　,u, g) {
   t = new Date(t);
   t = Utilities.formatDate(t,'JST', 'M/d H:mm');
   var command = m.split(' ');
   var ss = SpreadsheetApp.openById('18Vg-opLsCYyAW09wpy1m0YOXDvreVZTSSwSTonQBzlM');
   var sh = ss.getSheetByName('五井火力'); //契約シートの呼び出し
-  var lastRow = sh.getDataRange().getLastRow();　//最終行の呼び出し  
+  var lastRow = sh.getDataRange().getLastRow();　//最終行の呼び出し
+  var data = sh.getDataRange().getValues();  
+  
+  var shCus = ss.getSheetByName('五井火力引取事業者リスト');
+  var cusData = shCus.getDataRange().getValues();
 
 // ==================================  
 // 先頭が「新規」のとき
@@ -104,7 +104,6 @@ function setData(m,t　,u) {
 // 先頭が「配車」のとき
 // ==================================
   else if (command[0] == '配車') {
-    var data = sh.getDataRange().getValues();
     var replyMessage = 'Indexが正しくありません。';
     
     if (command.length == 3) {
@@ -145,13 +144,6 @@ function setData(m,t　,u) {
 // 先頭が「依頼」のとき
 // ==================================
   else if (command[0] == '依頼') {
-    var ss = SpreadsheetApp.openById('18Vg-opLsCYyAW09wpy1m0YOXDvreVZTSSwSTonQBzlM');
-    var shCus = ss.getSheetByName('五井火力引取事業者リスト');
-
-    // 顧客ごとにメッセージを送信する。顧客名とグループIDは事業者リストから取得する。
-    var cusData = shCus.getDataRange().getValues();
-    
-    // 指定の日付を取得する
     var date = command[1];
 //    date = Utilities.formatDate(date,'JST', 'M/d');
     Logger.log(date);
@@ -269,6 +261,44 @@ function setData(m,t　,u) {
       return replyMessage
     }
   }
+
+// ==================================  
+// 先頭が「配車可能です！」もしくは「確認しました！」のとき
+// ==================================
+  else if (command[0] == '配車可能です！' || '確認済みです！') {
+    for (var i=1; i<cusData.length; i++) {
+      if (cusData[i][1] == g) {
+        for (var j=1; j<data.length; j++) {
+          if (cusData[i][0] == data[j][4] && data[j][7] == '確認前') {
+            sh.getRange(j+1,8).setValue('確認済');
+          }
+        }
+      }
+    }
+    var postData = {
+      "to": g,
+      "messages": [{
+        "type": "text",
+        "text": 'ご確認ありがとうございます！',
+      }]
+    };
+    pushMessage(postData);
+  }
+  
+// ==================================  
+// 先頭が「変更希望です！」のとき
+// ==================================
+  else if (command[0] == '配車可能です！' || '確認済みです！') {
+    var postData = {
+      "to": g,
+      "messages": [{
+        "type": "text",
+        "text": '変更を希望される車両と条件を記入お願い致します。',
+      }]
+    };
+    pushMessage(postData);
+  }
+
   
 // ==================================  
 // 先頭が「確認」のとき
