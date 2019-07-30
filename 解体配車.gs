@@ -165,7 +165,7 @@ function setData(m,t　,u, g) {
             "to": id,
             "messages": [{
               "type": "flex",
-              "altText": "Flex Message",
+              "altText": "五井火力配車依頼",
               "contents": {
                 "type": "bubble",
                 "body": {
@@ -235,8 +235,9 @@ function setData(m,t　,u, g) {
                         "label": "配車可能",
                         "text": "配車可能です！"
                       },
+                      "color": "#1D00FB",
                       "height": "sm",
-                      "style": "link"
+                      "style": "primary"
                     },
                     {
                       "type": "button",
@@ -245,8 +246,9 @@ function setData(m,t　,u, g) {
                         "label": "変更希望",
                         "text": "変更希望です！"
                       },
+                      "margin": "md",
                       "height": "sm",
-                      "style": "link"
+                      "style": "secondary"
                     },
                     {
                       "type": "spacer",
@@ -266,7 +268,7 @@ function setData(m,t　,u, g) {
             "to": id,
             "messages": [{
               "type": "flex",
-              "altText": "Flex Message",
+              "altText": "五井火力配車依頼",
               "contents": {
                 "type": "bubble",
                 "body": {
@@ -312,7 +314,7 @@ function setData(m,t　,u, g) {
                         "text": "確認しました！"
                       },
                       "height": "sm",
-                      "style": "link"
+                      "style": "secondary"
                     },
                     {
                       "type": "spacer",
@@ -346,7 +348,7 @@ function setData(m,t　,u, g) {
         "to": id,
         "messages": [{
           "type": "flex",
-          "altText": "Flex Message",
+          "altText": "五井火力配車依頼",
           "contents": {
             "type": "bubble",
             "body": {
@@ -416,8 +418,9 @@ function setData(m,t　,u, g) {
                     "label": "配車可能",
                     "text": "配車可能です！"
                   },
+                  "color": "#1D00FB",
                   "height": "sm",
-                  "style": "link"
+                  "style": "primary"
                 },
                 {
                   "type": "button",
@@ -426,8 +429,9 @@ function setData(m,t　,u, g) {
                     "label": "変更希望",
                     "text": "変更希望です！"
                   },
+                  "margin": "md",
                   "height": "sm",
-                  "style": "link"
+                  "style": "secondary"
                 },
                 {
                   "type": "spacer",
@@ -445,6 +449,21 @@ function setData(m,t　,u, g) {
     }
   }
 
+// ==================================  
+// 先頭が「変更希望です！」のとき
+// ==================================
+  else if (command[0] == '変更希望です！') {
+    var postData = {
+      "to": g,
+      "messages": [{
+        "type": "text",
+        "text": '変更を希望される車両と条件を記入お願い致します。',
+      }]
+    };
+    pushMessage(postData);
+  }
+
+  
 // ==================================  
 // 先頭が「配車可能です！」もしくは「確認しました！」のとき
 // ==================================
@@ -468,19 +487,6 @@ function setData(m,t　,u, g) {
     pushMessage(postData);
   }
   
-// ==================================  
-// 先頭が「変更希望です！」のとき
-// ==================================
-  else if (command[0] == '変更希望です！') {
-    var postData = {
-      "to": g,
-      "messages": [{
-        "type": "text",
-        "text": '変更を希望される車両と条件を記入お願い致します。',
-      }]
-    };
-    pushMessage(postData);
-  }
 
   
 // ==================================  
