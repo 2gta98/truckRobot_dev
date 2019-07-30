@@ -23,12 +23,13 @@ function createPostData(id,date,contents) {
             {
               "type": "text",
               "text": date + " 五井火力",
-              "size": "lg",
+              "size": "md",
               "weight": "bold"
             },
             {
               "type": "box",
               "layout": "baseline",
+              "margin": "sm",
               "contents": [
               {
                 "type": "text",
@@ -52,7 +53,7 @@ function createPostData(id,date,contents) {
                 {
                   "type": "text",
                   "text": te,
-                  "size": "md",
+                  "size": "sm",
                   "weight": "bold",
                   "color": "#474545",
                   "wrap": true
@@ -66,7 +67,7 @@ function createPostData(id,date,contents) {
         "footer": {
           "type": "box",
           "layout": "vertical",
-          "spacing": "sm",
+          "spacing": "md",
           "contents": [
             {
               "type": "button",
@@ -123,7 +124,7 @@ function createNullPostData(id,date) {
             {
               "type": "text",
               "text": date + " 五井火力",
-              "size": "lg",
+              "size": "md",
               "weight": "bold"
             },
             {
